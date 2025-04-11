@@ -34,7 +34,8 @@ namespace WordScramble
         /// <see cref="double"/> (in seconds).</param>
         public GameResult(string word, double timeTaken)
         {
-            // ////////// => TO IMPLEMENT <= //////////// //
+            Word = word;
+            TimeTaken = timeTaken;
         }
     }
 }

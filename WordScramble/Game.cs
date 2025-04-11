@@ -24,7 +24,12 @@ namespace WordScramble
         /// </summary>
         public Game()
         {
-            // ////////// => TO IMPLEMENT <= //////////// //
+            wordProvider = new WordProvider();
+            gameStats = new GameResult[5];
+            for (int i = 0; i < gameStats.Length; i++)
+            {
+                gameStats[i] = null;
+            }
         }
 
         /// <summary>
@@ -51,10 +56,10 @@ namespace WordScramble
                 switch (choice)
                 {
                     case "Start Game":
-                        // ////////// => TO IMPLEMENT <= //////////// //
+                        StartGame();
                         break;
                     case "View Game Stats":
-                        // ////////// => TO IMPLEMENT <= //////////// //
+                        ShowGameStats();
                         break;
                     case "Quit":
                         return;
@@ -79,12 +84,12 @@ namespace WordScramble
             /// <summary>
             /// The randomly chosen word for the current round.
             /// </summary>
-            string word = // ////////// => TO IMPLEMENT <= //////////// //
+            string word = wordProvider.GetRandomWord();
 
             /// <summary>
             /// The scrambled version of the word.
             /// </summary>
-            string scrambledWord = // ////////// => TO IMPLEMENT <= //////////// //
+            string scrambledWord = wordProvider.GetScrambledWord(word);
 
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold green]Unscramble the word:[/]");
@@ -105,7 +110,7 @@ namespace WordScramble
             /// <summary>
             /// Checks if the player's guess is correct.
             /// </summary>
-            bool isCorrect = // ////////// => TO IMPLEMENT <= //////////// //
+            bool isCorrect = string.Equals(userInput, word, StringComparison.OrdinalIgnoreCase);
 
             if (isCorrect)
             {
@@ -116,11 +121,16 @@ namespace WordScramble
                 // Shift existing entries
                 for (int i = gameStats.Length - 1; i > 0; i--)
                 {
-                    // ////////// => TO IMPLEMENT <= //////////// //
+                    if (gameStats[i - 1] == null)
+                    {
+                        break;
+                    }
+
+                    gameStats[i] = gameStats[i - 1];
                 }
 
                 // Add new result at the beginning
-                gameStats[0] = // ////////// => TO IMPLEMENT <= //////////// //
+                gameStats[0] = new GameResult(word, timeTaken);
             }
             else
             {
@@ -156,12 +166,15 @@ namespace WordScramble
             {
                 if (gameStats[i] == null)
                 {
-                    // ////////// => TO IMPLEMENT <= //////////// //
+                    continue;
                 }
                 
                 // Add row to table
                 // Table.AddRow() only accepts strings
-                // ////////// => TO IMPLEMENT <= //////////// //
+                string rank = (i + 1).ToString();
+                string word = gameStats[i].Word;
+                string timeTaken = gameStats[i].TimeTaken.ToString("F2");
+                table.AddRow(rank, word, timeTaken);
             }
 
             AnsiConsole.Write(table);
@@ -169,5 +182,6 @@ namespace WordScramble
                 "\n[bold green]Press Enter to Return to Menu...[/]");
             Console.ReadLine();
         }
+        
     }
 }
