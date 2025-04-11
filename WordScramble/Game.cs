@@ -51,7 +51,7 @@ namespace WordScramble
                 string choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[bold yellow]Word Scramble[/]")
-                        .AddChoices("Start Game", "View Game Stats", "Quit"));
+                        .AddChoices("Start Game", "View Game Stats","BreakDown Chart", "Quit"));
 
                 switch (choice)
                 {
@@ -60,6 +60,9 @@ namespace WordScramble
                         break;
                     case "View Game Stats":
                         ShowGameStats();
+                        break;
+                    case "BreakDown Chart":
+                        ShowBreakDownChart();
                         break;
                     case "Quit":
                         return;
@@ -118,19 +121,13 @@ namespace WordScramble
                 AnsiConsole.MarkupLine(
                     $"[bold]Time Taken:[/] {timeTaken:F2} Seconds");
 
-                // Shift existing entries
+                
                 for (int i = gameStats.Length - 1; i > 0; i--)
                 {
-                    if (gameStats[i - 1] == null)
-                    {
-                        break;
-                    }
-
                     gameStats[i] = gameStats[i - 1];
                 }
-
-                // Add new result at the beginning
                 gameStats[0] = new GameResult(word, timeTaken);
+
             }
             else
             {
@@ -168,13 +165,11 @@ namespace WordScramble
                 {
                     continue;
                 }
-                
-                // Add row to table
-                // Table.AddRow() only accepts strings
                 string rank = (i + 1).ToString();
                 string word = gameStats[i].Word;
                 string timeTaken = gameStats[i].TimeTaken.ToString("F2");
                 table.AddRow(rank, word, timeTaken);
+    
             }
 
             AnsiConsole.Write(table);
@@ -183,5 +178,20 @@ namespace WordScramble
             Console.ReadLine();
         }
         
+        private void ShowBreakDownChart()
+        {
+            // Create a new chart
+
+            var chart = new BarChart()
+                .Width(60)
+                .Label("Game Stats Breakdown");
+
+            
+            // Display the chart
+            AnsiConsole.Write(chart);
+        AnsiConsole.Markup(
+                "\n[bold green]Press Enter to Return to Menu...[/]");
+            Console.ReadLine();
+        }
     }
 }
