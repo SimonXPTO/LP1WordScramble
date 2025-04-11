@@ -1,0 +1,15 @@
+cat
+dog
+bat
+tree
+ball
+bird
+fish
+star
+moon
+book
+coin
+apple
+pear
+rain
+sand
