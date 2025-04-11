@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Spectre.Console;
 
 namespace WordScramble
@@ -182,16 +184,39 @@ namespace WordScramble
         {
             // Create a new chart
 
-            var chart = new BarChart()
-                .Width(60)
-                .Label("Game Stats Breakdown");
-
+            BreakdownChart brk = new BreakdownChart()
+                .Width(60);
             
-            // Display the chart
-            AnsiConsole.Write(chart);
-        AnsiConsole.Markup(
+            
+            // Add the data to the chart
+
+            int countTotal = gameStats.Count(g => g != null);
+            for (int i = 0; i < gameStats.Length; i++)
+            {
+                if (gameStats[i] == null)
+                {
+                    continue;
+                }
+                string word = gameStats[i].Word;
+                int count = gameStats.Count(g => g != null && g.Word == word);
+                double percentage = Math.Round((double)count / countTotal * 100, 2);
+                if (brk.Data.Any(item => item.Label == word))
+                {
+                    continue;
+                }
+                brk.AddItem(word, percentage, Color.Green);
+            }
+
+
+            AnsiConsole.Clear();
+            AnsiConsole.Write(brk
+            .ShowPercentage());
+
+            AnsiConsole.Markup(
                 "\n[bold green]Press Enter to Return to Menu...[/]");
             Console.ReadLine();
+        
+        
         }
     }
 }
